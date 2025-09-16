@@ -16,11 +16,19 @@ int main()
     const size_t sizeX = 100, sizeY = 14000;
     char** text = (char**)calloc(sizeY, sizeof(char *));
     
+    printf("Starting...\n");
     initialize(text, sizeY, sizeX);
+
+    printf("Sorting...\n");
     sort(text, sizeY);
+
+    printf("Printing...\n");
     print(text, sizeY);
 
+    printf("Freeing...\n");
     allfree(text, sizeY);
+
+    printf("Ended...\n");
 
     return 0;
 }
@@ -33,7 +41,6 @@ void print(char** matrix, size_t sizeY)
 
     for(int y = 0; y < sizeY; y++)
     {
-        printf("%s\n", matrix[y]);
         my_fputs(matrix[y], output_file);
     }
 }
@@ -78,18 +85,54 @@ void allfree(char **matrix, size_t sizeY)
     free(matrix);
 }
 
-void sort(char **matrix, size_t sizeY)
+void sort(char** data, size_t size)
 {
-    for(size_t i = 0; i < sizeY-1; i++)
+    assert(data != NULL);
+
+    if(size == 0)
     {
-        for(size_t j = 0; j < sizeY-1; j++)
+        return;
+    }
+
+    char** data_sm = (char**)calloc(size, sizeof(char**));
+    char** data_bg = (char**)calloc(size, sizeof(char**));
+
+    size_t size_sm = 0;
+    size_t size_bg = 0;
+
+    char* middle = data[0];
+
+    for(size_t i = 1; i < size; i++)
+    {
+        if(strcmp(data[i], middle) < 0)
         {
-           if(strcmp(matrix[j], matrix[j+1]) > 0)
-           {
-                swap(matrix, j, j+1);
-           } 
+            data_sm[size_sm++] = data[i];
+        }
+        else
+        {
+            data_bg[size_bg++] = data[i];
         }
     }
+
+    data_sm[size_sm] = NULL;
+    data_bg[size_bg] = NULL;
+
+    sort(data_sm, size_sm);
+    sort(data_bg, size_bg);
+
+    size_t global_counter = 0;
+    size_t local_counter = 0;
+
+    while((data[global_counter++] = data_sm[local_counter++]) != NULL);
+
+    global_counter--;
+    data[global_counter++] = middle;
+    local_counter = 0;
+
+    while((data[global_counter++] = data_bg[local_counter++]) != NULL);
+
+    free(data_sm);
+    free(data_bg);
 }
 
 void my_fgets(char *str, int cnt, FILE* file)
@@ -107,9 +150,12 @@ void my_fgets(char *str, int cnt, FILE* file)
 
 void my_fputs(const char *str, FILE* file)
 {
-    while(*str != '\0' && *str != EOF)
+    if(strlen(str) > 1 && strcmp(str, "А") >= 0)
     {
-        fputc(*(str++), file);
+        while(*str != '\0' && *str != EOF)
+        {
+            fputc(*(str++), file);
+        }
+        fputc('\n', file);
     }
-    fputc('\n', file);
 }
