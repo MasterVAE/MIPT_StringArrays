@@ -1,11 +1,14 @@
 #include <ctype.h>
-#include <sys/stat.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "array.h"
 
 void upgrade(FILE* input_file, FILE* output_file)
 {
+    assert(input_file != NULL);
+    assert(output_file != NULL);
+
     char c;
     while((c = getc(input_file)) != EOF)
     {
@@ -25,6 +28,8 @@ void upgrade(FILE* input_file, FILE* output_file)
 
 void print(char** text, size_t size, FILE* file)
 { 
+    assert(text != NULL);
+
     for(size_t y = 0; y < size; y++)
     {
         fprintf(file, "[%d] ", y);
@@ -38,20 +43,21 @@ void print(char** text, size_t size, FILE* file)
     putc('\n', file);
 }
 
-void initialize_buffer(char** buffer, size_t* size)
+void initialize_buffer(char** buffer, size_t* size, FILE* input_file, size_t file_size)
 {
-    FILE* input_file = fopen("middle.txt", "r");
-    struct stat file_info;
+    assert(buffer != NULL);
+    assert(size != NULL);
+    assert(input_file != NULL);
 
-    stat("middle.txt", &file_info);
 
-    char* buff = (char*)calloc((long long)file_info.st_size + 1, sizeof(char));
-    int len = fread(buff, sizeof(char), (size_t)file_info.st_size, input_file);
+
+    char* buff = (char*)calloc((long long)file_size + 1, sizeof(char));
+    int len = fread(buff, sizeof(char), file_size, input_file);
     fclose(input_file);
 
     buff[len] = '\0';
 
-    printf("File size: %lld\n", (long long)file_info.st_size);
+    printf("File size: %lld\n", (long long)file_size);
     printf("Buffer size: %d\n", len);
 
     *size = len;
@@ -60,6 +66,9 @@ void initialize_buffer(char** buffer, size_t* size)
 
 size_t initialize_text(char*** text, char* buffer, size_t size)
 {
+    assert(text != NULL);
+    assert(buffer != NULL);
+    
     size_t count = 0;
     for(size_t i = 0; i < size; i++)
     {

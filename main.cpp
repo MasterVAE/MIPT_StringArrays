@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+#include <sys/stat.h>
 
-#include "sorting.h"
-#include "array.h"
+#include "code/sorting.h"
+#include "code/array.h"
 
 
 
@@ -24,8 +25,8 @@ int main()
     char** text;
     size_t count;
 
-    FILE* input_file = fopen("hamlet.txt", "r");
-    FILE* middle_file = fopen("middle.txt", "w");
+    FILE* input_file = fopen("files/hamlet.txt", "r");
+    FILE* middle_file = fopen("files/middle.txt", "w");
 
     printf("Upgrading file...\n");
     
@@ -35,7 +36,10 @@ int main()
 
     printf("Initializing...\n");
 
-    initialize_buffer(&buffer, &size);
+    middle_file = fopen("files/middle.txt", "r");
+    struct stat file_info;
+    stat("files/middle.txt", &file_info);
+    initialize_buffer(&buffer, &size, middle_file, (size_t)file_info.st_size);
     count = initialize_text(&text, buffer, size);
 
     printf("Sorting...\n");
@@ -46,7 +50,7 @@ int main()
 
 
     printf("Printing...\n");
-    FILE* output_file = fopen("output.txt", "w");
+    FILE* output_file = fopen("files/output.txt", "w");
     print(text, count, output_file);
     fclose(output_file);
     

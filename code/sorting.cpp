@@ -5,6 +5,9 @@
 
 int str_cmp(const char* str1, const char* str2)
 {
+    assert(str1 != NULL);
+    assert(str2 != NULL);
+
     size_t i = 0;
     while(1)
     {
@@ -28,6 +31,9 @@ int str_cmp(const char* str1, const char* str2)
 
 int str_rcmp(const char* str1, const char* str2)
 {
+    assert(str1 != NULL);
+    assert(str2 != NULL);
+
     size_t len1 = 0;
     size_t len2 = 0;
 
@@ -72,6 +78,8 @@ int str_rcmp(const char* str1, const char* str2)
 
 void bubble_sort(char** text, size_t count)
 {
+    assert(text != NULL);
+
     for(int iter = 0; iter < count-1; iter++)
     {
         for(int i = 0; i < iter; i++)
