@@ -4,48 +4,16 @@
 
 #include "array.h"
 
-void upgrade(FILE* input_file, FILE* output_file)
-{
-    assert(input_file != NULL);
-    assert(output_file != NULL);
-
-    char c;
-    short int wrd = 0;
-    while((c = getc(input_file)) != EOF)
-    {
-        if(c != '\n')
-        {
-            if(isalnum(c))
-            {
-                wrd = 1;
-                fputc(tolower(c), output_file);
-            }
-            else if(c == ' ' && wrd)
-            {
-                fputc(c, output_file);
-            }
-        }
-        else
-        {
-            if(wrd)
-            {
-                fputc(c, output_file);
-                wrd = 0; 
-            }
-        }
-    }
-}
-
 void print(char** text, size_t size, FILE* file)
 { 
     assert(text != NULL);
 
-    for(size_t y = 0; y < size; y++)
+    for(size_t y = 0; y < size-10; y++)
     {
-        fprintf(file, "[%d] ", y);
+        fprintf(file, "[%lu] ", y);
         int i = 0;
         char c;
-        while((c = text[y][i++]) != '\n') putc(c, file);
+        while((c = text[y][i++]) != '\n' && c != EOF) putc(c, file);
 
         putc('\n', file);
 
@@ -59,16 +27,13 @@ void initialize_buffer(char** buffer, size_t* size, FILE* input_file, size_t fil
     assert(size != NULL);
     assert(input_file != NULL);
 
-
-
-    char* buff = (char*)calloc((long long)file_size + 1, sizeof(char));
-    int len = fread(buff, sizeof(char), file_size, input_file);
-    fclose(input_file);
+    char* buff = (char*)calloc(file_size + 1, sizeof(char));
+    size_t len = fread(buff, sizeof(char), file_size, input_file);
 
     buff[len] = '\0';
 
     printf("File size: %lld\n", (long long)file_size);
-    printf("Buffer size: %d\n", len);
+    printf("Buffer size: %lu\n", len);
 
     *size = len;
     *buffer = buff;
@@ -79,23 +44,25 @@ size_t initialize_text(char*** text, char* buffer, size_t size)
     assert(text != NULL);
     assert(buffer != NULL);
     
-    size_t count = 0;
+    size_t count = 1;
     for(size_t i = 0; i < size; i++)
     {
-        if(buffer[i] == '\n')
+        if(buffer[i] == '\n' && buffer[i+1] != EOF)
         {
             count++;
         }
     }
 
     *text = (char**)calloc(count, sizeof(char*));
+    assert(*text != NULL);
 
     (*text)[0] = buffer;
+
     size_t j = 1;
-    for(size_t i = 0; i < size; i++)
+    for(size_t i = 0; i < size && j < count; i++)
     {
         if(buffer[i] == '\n')
-        {
+        {       
             (*text)[j++] = buffer+i+1;
         }
     }

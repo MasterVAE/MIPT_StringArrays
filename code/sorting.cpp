@@ -8,22 +8,24 @@ int str_cmp(const char* str1, const char* str2)
     assert(str1 != NULL);
     assert(str2 != NULL);
 
-    size_t i = 0;
+    size_t i1 = 0;
+    size_t i2 = 0;
     while(1)
     {
-        if(str1[i] == '\n' || str2[i] == '\n')
+        if(str1[i1] == '\n' || str2[i2] == '\n')
         {
-            return str1[1] - str2[i];
+            return str1[i1] - str2[i2];
         }
         else
         {
-            if(str1[i] != str2[i])
+            if(str1[i1] != str2[i2])
             {
-                return str1[i] - str2[i];
+                return str1[i1] - str2[i2];
             }
             else
             {
-                i++;
+                i1++;
+                i2++;
             }
         }
     }
@@ -47,7 +49,7 @@ int str_rcmp(const char* str1, const char* str2)
         len2++;
     }
 
-    int i = 0;
+    size_t i = 0;
     while(1)
     {
         if(i >= len1)
@@ -80,9 +82,9 @@ void bubble_sort(char** text, size_t count)
 {
     assert(text != NULL);
 
-    for(int iter = 0; iter < count-1; iter++)
+    for(size_t iter = 0; iter < count-1; iter++)
     {
-        for(int i = 0; i < iter; i++)
+        for(size_t i = 0; i < iter; i++)
         {
             if(str_cmp(text[i], text[i+1]) > 0)
             {
@@ -92,7 +94,7 @@ void bubble_sort(char** text, size_t count)
     }
 }
 
-void swap(char** matrix, int y1, int y2)
+void swap(char** matrix, size_t y1, size_t y2)
 {
     assert(matrix != NULL);
 
