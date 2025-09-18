@@ -10,18 +10,28 @@ void upgrade(FILE* input_file, FILE* output_file)
     assert(output_file != NULL);
 
     char c;
+    short int wrd = 0;
     while((c = getc(input_file)) != EOF)
     {
         if(c != '\n')
         {
-            if(isalnum(c) || c == ' ')
+            if(isalnum(c))
+            {
+                wrd = 1;
+                fputc(tolower(c), output_file);
+            }
+            else if(c == ' ' && wrd)
             {
                 fputc(c, output_file);
             }
         }
         else
         {
-            fputc(c, output_file); 
+            if(wrd)
+            {
+                fputc(c, output_file);
+                wrd = 0; 
+            }
         }
     }
 }

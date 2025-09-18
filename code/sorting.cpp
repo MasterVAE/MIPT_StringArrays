@@ -102,7 +102,7 @@ void swap(char** matrix, int y1, int y2)
     matrix[y2] = buffer;
 }
 
-void sort(char** data, size_t size)
+void sort(char** data, size_t size, int (*compare)(const char*, const char*))
 {
     assert(data != NULL);
 
@@ -126,7 +126,7 @@ void sort(char** data, size_t size)
 
     for(size_t i = 1; i < size; i++)
     {
-        if(str_rcmp(data[i], middle) < 0)
+        if(compare(data[i], middle) < 0)
         {
             data_sm[size_sm++] = data[i];
         }
@@ -136,8 +136,8 @@ void sort(char** data, size_t size)
         }
     }
 
-    sort(data_sm, size_sm);
-    sort(data_bg, size_bg);
+    sort(data_sm, size_sm, compare);
+    sort(data_bg, size_bg, compare);
 
     size_t global_counter = 0;
 

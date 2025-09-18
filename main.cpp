@@ -45,7 +45,7 @@ int main()
     printf("Sorting...\n");
 
     clock_gettime(CLOCK_MONOTONIC_RAW, &start);  
-    sort(text, count);
+    sort(text, count, str_rcmp);
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);  
 
 
