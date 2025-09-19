@@ -25,9 +25,9 @@ void print(char **matrix, size_t sizeY)
 {
     assert(matrix != NULL);
 
-    for(int y = 0; y < sizeY; y++)
+    for(size_t y = 0; y < sizeY; y++)
     {
-        printf("[%d] %s \n", y, matrix[y]);
+        printf("[%lu] %s \n", y, matrix[y]);
     }
     printf("\n");
 }
@@ -36,14 +36,14 @@ void initialize(char **matrix, size_t sizeY, size_t sizeX)
 {
     assert(matrix != NULL);
 
-    int c = 0;
-    for(int y = 0; y < sizeY; y++)
+    char c = 0;
+    for(size_t y = 0; y < sizeY; y++)
     {
         matrix[y] = (char *)calloc(sizeX, sizeof(char));
 
         assert(matrix[y] != NULL);
 
-        for(int x = 0; x < sizeX-1; x++)
+        for(size_t x = 0; x < sizeX-1; x++)
         {
             matrix[y][x] = c + 'a';
             c++;
